@@ -1,10 +1,9 @@
-
 const TripForm = require("../models/tripForm.model");
 // POST: Create a new invoice (TripForm)
 const create_invoice = async (req, res) => {
   try {
     const invoiceData = req.body;
-    
+
     // Create a new invoice document
     const newInvoice = new TripForm(invoiceData);
 
@@ -36,4 +35,21 @@ const get_invoice = async (req, res) => {
   }
 };
 
-module.exports = { get_invoice, create_invoice };
+const get_invoices = async (req, res) => {
+  try {
+    const invoice = await TripForm.find();
+
+    if (!invoice) {
+      return res.status(404).json({ error: "Invoice not found" });
+    }
+
+    res.json(invoice);
+  } catch (err) {
+    console.error(err);
+    res
+      .status(400)
+      .json({ error: "Internal Server Error - Database may not connected!" });
+  }
+};
+
+module.exports = { get_invoice, create_invoice, get_invoices};
