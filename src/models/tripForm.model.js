@@ -2,48 +2,51 @@ const mongoose = require("mongoose");
 const { MemberSchema } = require("./member.model");
 const { ServiceSchema } = require("./service.model");
 
-const TripFormSchema = new mongoose.Schema({
-  invoiceNumber: {
-    type: String,
-    unique: true,
-    index: true,
+const TripFormSchema = new mongoose.Schema(
+  {
+    invoiceNumber: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+    customerName: String,
+    phone: String,
+    date: Date,
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Member",
+    },
+    admin: String,
+    program3DayMakkahMadinah: Boolean,
+    program4DayMakkahMadinah: Boolean,
+    program3DayMakkah: Boolean,
+    programOneWayMakkah: Boolean,
+    programReturnDammam: Boolean,
+    members: [MemberSchema], // embed schema, not model
+    services: [ServiceSchema], // embed schema, not model
+    paymentMethod: {
+      type: String,
+      enum: [
+        "Cash",
+        "Card",
+        "RajhiNetwork",
+        "HalNetwork",
+        "STC",
+        "RajhiBank",
+        "HalBank",
+        "STCPay",
+        "Other",
+      ],
+    },
+    otherPaymentMethod: String,
+    totalBeforeTax: Number,
+    valueAddedTax: Number,
+    totalAfterTax: Number,
+    customerSignature: String,
+    branchManagerSignature: String,
   },
-  customerName: String,
-  phone: String,
-  date: Date,
-  customerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Member",
-  },
-  admin: String,
-  program3DayMakkahMadinah: Boolean,
-  program4DayMakkahMadinah: Boolean,
-  program3DayMakkah: Boolean,
-  programOneWayMakkah: Boolean,
-  programReturnDammam: Boolean,
-  members: [MemberSchema], // embed schema, not model
-  services: [ServiceSchema], // embed schema, not model
-  paymentMethod: {
-    type: String,
-    enum: [
-      "Cash",
-      "Card",
-      "RajhiNetwork",
-      "HalNetwork",
-      "STC",
-      "RajhiBank",
-      "HalBank",
-      "STCPay",
-      "Other",
-    ],
-  },
-  otherPaymentMethod: String,
-  totalBeforeTax: Number,
-  valueAddedTax: Number,
-  totalAfterTax: Number,
-  customerSignature: String,
-  branchManagerSignature: String,
-});
+  { timestamps: true }
+);
 
 // Function to generate invoice number, e.g. INV-20250803-0001
 async function generateInvoiceNumber(doc) {

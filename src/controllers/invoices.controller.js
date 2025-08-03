@@ -1,4 +1,6 @@
 const TripForm = require("../models/tripForm.model");
+const QRCode = require("qrcode");
+
 // POST: Create a new invoice (TripForm)
 const create_invoice = async (req, res) => {
   try {
@@ -6,7 +8,7 @@ const create_invoice = async (req, res) => {
 
     // Create a new invoice document
     const newInvoice = new TripForm(invoiceData);
-
+    
     // Save to MongoDB
     const savedInvoice = await newInvoice.save();
 
@@ -52,4 +54,16 @@ const get_invoices = async (req, res) => {
   }
 };
 
-module.exports = { get_invoice, create_invoice, get_invoices};
+const generateQRcode = async (req, res) => {
+  const { url } = req.body;
+
+  try {
+    const qrDataUrl = await QRCode.toDataURL(url); // Generate QR code as Data URL
+    res.json({
+      qrImageTag: qrDataUrl,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to generate QR code" });
+  }
+};
+module.exports = { get_invoice, create_invoice, get_invoices, generateQRcode };
