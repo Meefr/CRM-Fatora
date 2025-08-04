@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { MemberSchema } = require("./member.model");
 const { ServiceSchema } = require("./service.model");
+const { ProgramSchema } = require("./program.model");
 
 const TripFormSchema = new mongoose.Schema(
   {
@@ -17,13 +18,14 @@ const TripFormSchema = new mongoose.Schema(
       ref: "Member",
     },
     admin: String,
-    program3DayMakkahMadinah: Boolean,
-    program4DayMakkahMadinah: Boolean,
-    program3DayMakkah: Boolean,
-    programOneWayMakkah: Boolean,
-    programReturnDammam: Boolean,
+    program: ProgramSchema,
     members: [MemberSchema], // embed schema, not model
     services: [ServiceSchema], // embed schema, not model
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "rejected"],
+      default: "pending",
+    },
     paymentMethod: {
       type: String,
       enum: [
@@ -106,4 +108,4 @@ TripFormSchema.pre("save", async function (next) {
 
 const TripForm = mongoose.model("TripForm", TripFormSchema);
 
-module.exports = TripForm;
+module.exports = {TripForm};

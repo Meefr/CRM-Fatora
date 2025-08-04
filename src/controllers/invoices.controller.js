@@ -1,4 +1,4 @@
-const TripForm = require("../models/tripForm.model");
+const {TripForm} = require("../models/tripForm.model");
 const QRCode = require("qrcode");
 
 // POST: Create a new invoice (TripForm)
